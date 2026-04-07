@@ -1,86 +1,162 @@
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useRef, useEffect } from "react";
 
 const AppShowcase = () => {
-  const sectionRef = useRef(null);
-  const rydeRef = useRef(null);
-  const libraryRef = useRef(null);
-  const ycDirectoryRef = useRef(null);
+  const scrollRef = useRef(null);
 
-  useGSAP(() => {
-    // Animation for the main section
-    gsap.fromTo(
-      sectionRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 1.5 }
-    );
+  useEffect(() => {
+    const container = scrollRef.current;
+    let animationFrame;
+    let scrollAmount = 0;
 
-    // Animations for each app showcase
-    const cards = [rydeRef.current, libraryRef.current, ycDirectoryRef.current];
+    const scroll = () => {
+      if (!container) return;
 
-    cards.forEach((card, index) => {
-      gsap.fromTo(
-        card,
-        {
-          y: 50,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          delay: 0.3 * (index + 1),
-          scrollTrigger: {
-            trigger: card,
-            start: "top bottom-=100",
-          },
-        }
-      );
-    });
+      scrollAmount += 0.4;
+
+      if (scrollAmount >= container.scrollWidth / 2) {
+        scrollAmount = 0;
+      }
+
+      container.scrollLeft = scrollAmount;
+      animationFrame = requestAnimationFrame(scroll);
+    };
+
+    animationFrame = requestAnimationFrame(scroll);
+
+    return () => cancelAnimationFrame(animationFrame);
   }, []);
 
+  const cardStyle = {
+    position: "relative",
+    width: "540px",
+    height: "520px",
+    borderRadius: "1.5rem",
+    overflow: "hidden",
+    flexShrink: 0,
+    cursor: "pointer",
+    transition: "transform 0.4s ease",
+  };
+
+  const handleEnter = (e) => {
+    e.currentTarget.style.transform = "scale(1.05)";
+  };
+
+  const handleLeave = (e) => {
+    e.currentTarget.style.transform = "scale(1)";
+  };
+
+  const overlayStyle = {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    padding: "2rem",
+    background:
+      "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3), transparent)",
+    color: "white",
+  };
+
   return (
-    <div id="work" ref={sectionRef} className="app-showcase">
-      <div className="w-full">
-        <div className="showcaselayout">
-          <div ref={rydeRef} className="first-project-wrapper">
-            <div className="image-wrapper">
-              <img src="/images/project1.png" alt="Ryde App Interface" />
-            </div>
-            <div className="text-content">
-              <h2>
-                On-Demand Rides Made Simple with a Powerful, User-Friendly App
-                called Ryde
-              </h2>
-              <p className="text-white-50 md:text-xl">
-                An app built with React Native, Expo, & TailwindCSS for a fast,
-                user-friendly experience.
-              </p>
-            </div>
-          </div>
-
-          <div className="project-list-wrapper overflow-hidden">
-            <div className="project" ref={libraryRef}>
-              <div className="image-wrapper bg-[#FFEFDB]">
+    <div id="work" style={{ marginTop: "140px", marginBottom: "140px" }}>
+      <div style={{ width: "90%", margin: "0 auto", overflow: "hidden" }}>
+        <div
+          ref={scrollRef}
+          style={{ display: "flex", gap: "2.5rem", overflow: "hidden" }}
+        >
+          {[...Array(2)].map((_, i) => (
+            <>
+              {/* AYUSH */}
+              <div
+                key={"ayush" + i}
+                style={cardStyle}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+                onClick={() => window.open("http://3.109.203.114", "_blank")}
+              >
                 <img
-                  src="/images/project2.png"
-                  alt="Library Management Platform"
+                  src="images/—Pngtree—international day of yoga greeting_6288713.png"
+                  alt="AYUSH"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
+                <div style={overlayStyle}>
+                  <h2>AYUSH Portal</h2>
+                  <p>Government healthcare digitization platform.</p>
+                </div>
               </div>
-              <h2>The Library Management Platform</h2>
-            </div>
 
-            <div className="project" ref={ycDirectoryRef}>
-              <div className="image-wrapper bg-[#FFE7EB]">
-                <img src="/images/project3.png" alt="YC Directory App" />
+              {/* TreeSense */}
+              <div
+                key={"tree" + i}
+                style={cardStyle}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+                onClick={() =>
+                  window.open(
+                    "https://github.com/SaumyaJoshi675/tree-counting-system",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="/images/home.png"
+                  alt="TreeSense"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <div style={overlayStyle}>
+                  <h2>TreeSense</h2>
+                  <p>Green cover estimation using remote sensing.</p>
+                </div>
               </div>
-              <h2>YC Directory - A Startup Showcase App</h2>
-            </div>
-          </div>
+
+              {/* Hyperspectral */}
+              <div
+                key={"hyper" + i}
+                style={cardStyle}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+                onClick={() =>
+                  window.open(
+                    "https://github.com/SaumyaJoshi675/hyperspectral-mineral-classification-3dcnn",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="https://www.imechyperspectral.com/_next/image?url=https://drupal.imechyperspectral.com/sites/default/files/2025-11/IPERLITE%20imec%20hyperspectral.jpg&w=3840&q=75"
+                  alt="Hyperspectral"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <div style={overlayStyle}>
+                  <h2>Hyperspectral Imaging</h2>
+                  <p>Mineral detection using spectral data.</p>
+                </div>
+              </div>
+
+              {/* SAR */}
+              <div
+                key={"sar" + i}
+                style={cardStyle}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+                onClick={() =>
+                  window.open(
+                    "https://github.com/Kriti-Joshi1/sih",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="https://i.ytimg.com/vi/YdkWwoQw5o8/maxresdefault.jpg"
+                  alt="SAR"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <div style={overlayStyle}>
+                  <h2>SAR Colorization</h2>
+                  <p>Deep learning for SAR enhancement.</p>
+                </div>
+              </div>
+            </>
+          ))}
         </div>
       </div>
     </div>
